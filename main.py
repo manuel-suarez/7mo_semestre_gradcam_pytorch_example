@@ -68,6 +68,28 @@ class SemanticSegmentationTarget:
     def __call__(self, model_output):
         return (model_output[self.category, :, :] * self.mask).sum()
 
+target_layers = [model.model.backbone.layer1]
+targets = [SemanticSegmentationTarget(car_category, car_mask_float)]
+with GradCAM(model=model,
+             target_layers=target_layers) as cam:
+    grayscale_cam = cam(input_tensor=input_tensor,
+                        targets=targets)[0, :]
+    cam_image = show_cam_on_image(rgb_img, grayscale_cam, use_rgb=True)
+
+img = Image.fromarray(cam_image)
+img.save('result_layer01.png')
+
+target_layers = [model.model.backbone.layer2]
+targets = [SemanticSegmentationTarget(car_category, car_mask_float)]
+with GradCAM(model=model,
+             target_layers=target_layers) as cam:
+    grayscale_cam = cam(input_tensor=input_tensor,
+                        targets=targets)[0, :]
+    cam_image = show_cam_on_image(rgb_img, grayscale_cam, use_rgb=True)
+
+img = Image.fromarray(cam_image)
+img.save('result_layer02.png')
+
 target_layers = [model.model.backbone.layer3]
 targets = [SemanticSegmentationTarget(car_category, car_mask_float)]
 with GradCAM(model=model,
@@ -77,4 +99,15 @@ with GradCAM(model=model,
     cam_image = show_cam_on_image(rgb_img, grayscale_cam, use_rgb=True)
 
 img = Image.fromarray(cam_image)
-img.save('result02.png')
+img.save('result_layer03.png')
+
+target_layers = [model.model.backbone.layer4]
+targets = [SemanticSegmentationTarget(car_category, car_mask_float)]
+with GradCAM(model=model,
+             target_layers=target_layers) as cam:
+    grayscale_cam = cam(input_tensor=input_tensor,
+                        targets=targets)[0, :]
+    cam_image = show_cam_on_image(rgb_img, grayscale_cam, use_rgb=True)
+
+img = Image.fromarray(cam_image)
+img.save('result_layer04.png')
